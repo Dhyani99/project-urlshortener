@@ -42,6 +42,7 @@ app.post("/api/shorturl", function (req, res) {
   console.log(url);
   dns.lookup(url, function (err) {
     if (err) {
+      console.error(err);
       res.json({ error: "invalid url" });
     } else {
       const urlId = shortid.generate();
