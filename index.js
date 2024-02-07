@@ -24,7 +24,7 @@ const urlSchema = new Schema({
   hash: String,
 });
 
-const URL = mongoose.model("URL", urlSchema);
+const URLModel = mongoose.model("URLModel", urlSchema);
 
 app.use("/public", express.static(`${process.cwd()}/public`));
 
@@ -39,17 +39,18 @@ app.get("/api/hello", function (req, res) {
 
 app.post("/api/shorturl", function (req, res) {
   var url1 = decodeURIComponent(req.body.url);
-  var url = url1.substring(8);
+  var url = new URL(url1).hostname;
+  console.log(url);
   dns.lookup(url, function (err) {
     if (err) {
       console.error(err);
       res.json({ error: "invalid url" });
     } else {
       const urlId = shortid.generate();
-      URL.findOne({ original_url: url1 })
+      URLModel.findOne({ original_url: url1 })
         .then((data) => {
           if (!data) {
-            let urlObj = new URL({
+            let urlObj = new URLModel({
               original_url: url1,
               hash: urlId,
             });
@@ -70,7 +71,7 @@ app.post("/api/shorturl", function (req, res) {
 });
 
 app.get("/api/shorturl/:hash", function (req, res) {
-  URL.findOne({ hash: req.params.hash }).then((data) => {
+  URLModel.findOne({ hash: req.params.hash }).then((data) => {
     var url1 = decodeURIComponent(req.body.url);
     var dnsUrl = url1.substring(8);
     dns.lookup(dnsUrl, function (err) {
