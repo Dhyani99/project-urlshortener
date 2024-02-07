@@ -8,7 +8,8 @@ const shortid = require("shortid");
 const bodyParser = require("body-parser");
 const mware = bodyParser.urlencoded({ extended: false });
 let mongoose = require("mongoose");
-mongoose.connect(process.env.MONGO_URI);
+console.log(process.env.MONGO_URI);
+mongoose.connect('mongodb+srv://gandhidhyani:Mongoose-2024@mongoosecluster.5ftk1sz.mongodb.net/test?retryWrites=true&w=majority');
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -16,11 +17,6 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(mware);
 
-function sha1(data) {
-  var generator = crypto.createHash("sha1");
-  generator.update(data);
-  return generator.digest("hex");
-}
 console.log(mongoose.connection.readyState);
 const Schema = mongoose.Schema;
 const urlSchema = new Schema({
