@@ -38,7 +38,7 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.post("/api/shorturl", function (req, res) {
-  var url = req.body.url;
+  var url = decodeURI(req.body.url);
   dns.lookup(url, function (err) {
     if (err) {
       res.json({ error: "invalid url" });
