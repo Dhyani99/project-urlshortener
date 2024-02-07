@@ -38,19 +38,19 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.post("/api/shorturl", function (req, res) {
-  var url = decodeURIComponent(req.body.url);
-  console.log(url);
+  var url1 = decodeURIComponent(req.body.url);
+  var url = url1.substring(8);
   dns.lookup(url, function (err) {
     if (err) {
       console.error(err);
       res.json({ error: "invalid url" });
     } else {
       const urlId = shortid.generate();
-      URL.findOne({ original_url: url })
+      URL.findOne({ original_url: url1 })
         .then((data) => {
           if (!data) {
             let urlObj = new URL({
-              original_url: url,
+              original_url: url1,
               hash: urlId,
             });
             urlObj.save();
@@ -71,7 +71,9 @@ app.post("/api/shorturl", function (req, res) {
 
 app.get("/api/shorturl/:hash", function (req, res) {
   URL.findOne({ hash: req.params.hash }).then((data) => {
-    dns.lookup(data.original_url, function (err) {
+    var url1 = decodeURIComponent(req.body.url);
+    var dnsUrl = url1.substring(8);
+    dns.lookup(dnsUrl, function (err) {
       if (err) {
         res.json({ error: "invalid url" });
       } else {
