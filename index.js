@@ -17,7 +17,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(mware);
 
-console.log(mongoose.connection.readyState);
+//console.log(mongoose.connection.readyState);
 const Schema = mongoose.Schema;
 const urlSchema = new Schema({
   original_url: String,
@@ -39,6 +39,7 @@ app.get("/api/hello", function (req, res) {
 
 app.post("/api/shorturl", function (req, res) {
   var url = decodeURIComponent(req.body.url);
+  console.log(url);
   dns.lookup(url, function (err) {
     if (err) {
       res.json({ error: "invalid url" });
