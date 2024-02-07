@@ -72,8 +72,8 @@ app.post("/api/shorturl", function (req, res) {
 
 app.get("/api/shorturl/:hash", function (req, res) {
   URLModel.findOne({ hash: req.params.hash }).then((data) => {
-    var url1 = decodeURIComponent(req.body.url);
-    var dnsUrl = url1.substring(8);
+    var url1 = data.original_url;
+    var dnsUrl = new URL(url1).hostname;
     dns.lookup(dnsUrl, function (err) {
       if (err) {
         res.json({ error: "invalid url" });
